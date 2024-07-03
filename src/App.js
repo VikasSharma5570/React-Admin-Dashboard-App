@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import lightTheme from './themes/light';
+import darkTheme from './themes/dark';
+import Sidebar from './components/Sidebar';  // Ensure this path is correct
+import Navbar from './components/Navbar';
+import ThemeSwitcher from './components/ThemeSwitcher';
+import Dashboard from './pages/Dashboard';
+import Tables from './pages/Tables';
+import Charts from './pages/Charts';
+import Calendar from './pages/Calendar';
+import Kanban from './pages/Kanban';
 
 function App() {
+  const [theme, setTheme] = useState(lightTheme);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === lightTheme ? darkTheme : lightTheme));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <div className="App">
+          <Sidebar />
+          <div className="main-content">
+            <Navbar />
+            <ThemeSwitcher toggleTheme={toggleTheme} />
+            <Routes>
+              <Route path="/" exact element={<Dashboard />} />
+              <Route path="/tables" element={<Tables />} />
+              <Route path="/charts" element={<Charts />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/kanban" element={<Kanban />} />
+            </Routes>
+          </div>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 
